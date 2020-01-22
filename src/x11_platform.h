@@ -112,6 +112,7 @@ typedef Status (* PFN_XSendEvent)(Display*,Window,Bool,long,XEvent*);
 typedef int (* PFN_XSetClassHint)(Display*,Window,XClassHint*);
 typedef XErrorHandler (* PFN_XSetErrorHandler)(XErrorHandler);
 typedef void (* PFN_XSetICFocus)(XIC);
+typedef char* (* PFN_XSetIMValues)(XIM,...);
 typedef int (* PFN_XSetInputFocus)(Display*,Window,int,Time);
 typedef char* (* PFN_XSetLocaleModifiers)(const char*);
 typedef int (* PFN_XSetScreenSaver)(Display*,int,int,int,int);
@@ -208,6 +209,7 @@ typedef void (* PFN_Xutf8SetWMProperties)(Display*,Window,const char*,const char
 #define XSetClassHint _glfw.x11.xlib.SetClassHint
 #define XSetErrorHandler _glfw.x11.xlib.SetErrorHandler
 #define XSetICFocus _glfw.x11.xlib.SetICFocus
+#define XSetIMValues _glfw.x11.xlib.SetIMValues
 #define XSetInputFocus _glfw.x11.xlib.SetInputFocus
 #define XSetLocaleModifiers _glfw.x11.xlib.SetLocaleModifiers
 #define XSetScreenSaver _glfw.x11.xlib.SetScreenSaver
@@ -561,6 +563,7 @@ typedef struct _GLFWlibraryX11
         PFN_XSetClassHint SetClassHint;
         PFN_XSetErrorHandler SetErrorHandler;
         PFN_XSetICFocus SetICFocus;
+        PFN_XSetIMValues SetIMValues;
         PFN_XSetInputFocus SetInputFocus;
         PFN_XSetLocaleModifiers SetLocaleModifiers;
         PFN_XSetScreenSaver SetScreenSaver;

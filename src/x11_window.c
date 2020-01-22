@@ -590,6 +590,14 @@ static void enableCursor(_GLFWwindow* window)
     updateCursorImage(window);
 }
 
+// Clear its handle when the input context has been destroyed
+//
+static void inputContextDestroyCallback(XIC ic, XPointer clientData, XPointer callData)
+{
+    _GLFWwindow* window = (_GLFWwindow*) clientData;
+    window->x11.ic = NULL;
+}
+
 // Create the X11 window (and its colormap)
 //
 static GLFWbool createNativeWindow(_GLFWwindow* window,
@@ -772,6 +780,10 @@ static GLFWbool createNativeWindow(_GLFWwindow* window,
 
     if (_glfw.x11.im)
     {
+        XIMCallback callback;
+        callback.callback = (XIMProc) inputContextDestroyCallback;
+        callback.client_data = (XPointer) window;
+
         window->x11.ic = XCreateIC(_glfw.x11.im,
                                    XNInputStyle,
                                    XIMPreeditNothing | XIMStatusNothing,
@@ -779,6 +791,8 @@ static GLFWbool createNativeWindow(_GLFWwindow* window,
                                    window->x11.handle,
                                    XNFocusWindow,
                                    window->x11.handle,
+                                   XNDestroyCallback,
+                                   &callback,
                                    NULL);
     }
 

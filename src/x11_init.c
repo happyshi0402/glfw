@@ -326,6 +326,11 @@ static void createKeyTables(void)
     }
 }
 
+static void inputMethodDestroyCallback(XIM im, XPointer clientData, XPointer callData)
+{
+    _glfw.x11.im = NULL;
+}
+
 // Check whether the IM has a usable style
 //
 static GLFWbool hasUsableInputMethodStyle(void)
@@ -1082,6 +1087,8 @@ int _glfwPlatformInit(void)
         _glfw_dlsym(_glfw.x11.xlib.handle, "XSetErrorHandler");
     _glfw.x11.xlib.SetICFocus = (PFN_XSetICFocus)
         _glfw_dlsym(_glfw.x11.xlib.handle, "XSetICFocus");
+    _glfw.x11.xlib.SetIMValues = (PFN_XSetIMValues)
+        _glfw_dlsym(_glfw.x11.xlib.handle, "XSetIMValues");
     _glfw.x11.xlib.SetInputFocus = (PFN_XSetInputFocus)
         _glfw_dlsym(_glfw.x11.xlib.handle, "XSetInputFocus");
     _glfw.x11.xlib.SetLocaleModifiers = (PFN_XSetLocaleModifiers)
@@ -1193,6 +1200,14 @@ int _glfwPlatformInit(void)
                 _glfw.x11.im = NULL;
             }
         }
+    }
+
+    if (_glfw.x11.im)
+    {
+        XIMCallback callback;
+        callback.callback = (XIMProc) inputMethodDestroyCallback;
+        callback.client_data = NULL;
+        XSetIMValues(_glfw.x11.im, XNDestroyCallback, &callback, NULL);
     }
 
 #if defined(__linux__)
